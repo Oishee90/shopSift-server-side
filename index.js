@@ -7,9 +7,9 @@ const port = process.env.PORT || 5000;
 app.use(
     cors({
       origin: [
-        "http://localhost:5184",
+        "http://localhost:5179",
         "https://shopsift-website.web.app",
-        "https://shopsift-website.firebaseapp.com/login",
+        "https://shopsift-website.firebaseapp.com ",
       ],
       credentials: true,
     })
