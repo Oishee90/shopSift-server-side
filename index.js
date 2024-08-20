@@ -29,11 +29,16 @@ async function run() {
      
     const shopCollection = client.db('shopProduct').collection('product');
 
-    app.get('/products', async(req,res) => {
-        const cursor = shopCollection.find();
-        const result = await cursor.toArray();
-        res.send(result)
-    })
+   
+    app.get("/products",async(req,res)=>{
+        const search = req.query.search
+        let query = {
+            name: { $regex: search, $options: 'i'}
+        }
+         const result = await shopCollection
+         .find(query).toArray()
+         res.send(result)
+     })
 
 
 
