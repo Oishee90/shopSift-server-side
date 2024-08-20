@@ -63,15 +63,7 @@ async function run() {
             .skip(skip)
             .limit(limit);
     
-        if (order === "priceLowToHigh") {
-            products = products.sort({ price: 1 });
-        } else if (order === "priceHighToLow") {
-            products = products.sort({ price: -1 });
-        } else if (order === "dateNewestFirst") {
-            products = products.sort({ createdAt: -1 });
-        }
-    
-        products = await products.toArray();
+     
     
         res.send({
             products,
@@ -86,7 +78,7 @@ async function run() {
 
 
 
-    // Send a ping to confirm a successful connection
+   
     // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
