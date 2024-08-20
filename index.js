@@ -30,15 +30,59 @@ async function run() {
     const shopCollection = client.db('shopProduct').collection('product');
 
    
-    app.get("/products",async(req,res)=>{
-        const search = req.query.search
+    app.get("/products", async (req, res) => {
+        const search = req.query.search || "";
+        const order = req.query.order || "";
+        const brandFilter = req.query.brandFilter || "";
+        const categoryFilter = req.query.categoryFilter || "";
+        const priceRange = req.query.priceRange || "";
+        const page = parseInt(req.query.page) || 1; 
+        const limit = 6; 
+    
+        const skip = (page - 1) * limit;
+    
         let query = {
-            name: { $regex: search, $options: 'i'}
+            name: { $regex: search, $options: 'i' }
+        };
+    
+        if (brandFilter) query.brand = brandFilter;
+        if (categoryFilter) query.category = categoryFilter;
+    
+        if (priceRange === "low") {
+            query.price = { $lt: 50 };
+        } else if (priceRange === "medium") {
+            query.price = { $gte: 50, $lte: 100 };
+        } else if (priceRange === "high") {
+            query.price = { $gt: 100 };
         }
-         const result = await shopCollection
-         .find(query).toArray()
-         res.send(result)
-     })
+    
+        const totalProducts = await shopCollection.countDocuments(query);
+    
+        let products = await shopCollection
+            .find(query)
+            .skip(skip)
+            .limit(limit);
+    
+        if (order === "priceLowToHigh") {
+            products = products.sort({ price: 1 });
+        } else if (order === "priceHighToLow") {
+            products = products.sort({ price: -1 });
+        } else if (order === "dateNewestFirst") {
+            products = products.sort({ createdAt: -1 });
+        }
+    
+        products = await products.toArray();
+    
+        res.send({
+            products,
+            totalProducts,
+            totalPages: Math.ceil(totalProducts / limit),
+            currentPage: page
+        });
+    });
+    
+    
+    
 
 
 
