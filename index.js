@@ -4,7 +4,16 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // middleware
-app.use(cors());
+app.use(
+    cors({
+      origin: [
+        "http://localhost:5184",
+        "https://shopsift-website.web.app",
+        "https://shopsift-website.firebaseapp.com/login",
+      ],
+      credentials: true,
+    })
+  );
 app.use(express.json());
 require('dotenv').config();
 
@@ -63,7 +72,15 @@ async function run() {
             .skip(skip)
             .limit(limit);
     
-     
+        if (order === "priceLowToHigh") {
+            products = products.sort({ price: 1 });
+        } else if (order === "priceHighToLow") {
+            products = products.sort({ price: -1 });
+        } else if (order === "dateNewestFirst") {
+            products = products.sort({ createdAt: -1 });
+        }
+    
+        products = await products.toArray();
     
         res.send({
             products,
