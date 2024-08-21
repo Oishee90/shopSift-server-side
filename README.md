@@ -23,7 +23,7 @@ ShopSift is a full-stack e-commerce platform designed to provide users with an i
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/Oishee90/shopsift-wrbsite
+    git clone https://github.com/Oishee90/shopSift-server-side
     ```
 
 2. Navigate to the project directory:
